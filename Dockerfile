@@ -1,4 +1,4 @@
-FROM node:16-slim
+FROM node:16-slim AS build
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app
@@ -12,6 +12,9 @@ RUN npm install
 # Entrypoint script to require instrumentation.js and then run app.js
 COPY instrumentation.js .
 COPY app.js .
+
+FROM alpine:latest
+COPY --from=build /usr/src/app app
 
 # Expose port 8080
 EXPOSE 8080
